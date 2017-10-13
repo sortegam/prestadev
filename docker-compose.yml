@@ -23,8 +23,6 @@ services:
       - DB_NAME=prestashop
       - PS_INSTALL_AUTO=0
       - PS_FOLDER_ADMIN=admin123
-      - ADMIN_MAIL=shopy@shopy.es
-      - ADMIN_PASSWD=12345678
   mariadb:
     build: ./docker/mariadb
     ports:
