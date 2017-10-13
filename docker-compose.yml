@@ -1,0 +1,45 @@
+version: '2'
+
+services:
+  prestashop:
+    build: ./docker/prestashop
+    ports:
+      - 8080:80
+    links:
+      - mariadb:mariadb
+    depends_on:
+      - mariadb
+    volumes:
+      - ./docker/common:/scripts
+      - ./prestashop/src:/var/www/html
+      - ./src/modules:/var/www/html/modules
+      - ./src/themes:/var/www/html/themes
+      - ./src/override:/var/www/html/override
+    environment:
+      - PS_DEV_MODE=1
+      - DB_SERVER=mariadb
+      - DB_USER=root
+      - DB_PASSWD=root
+      - DB_NAME=prestashop
+      - PS_INSTALL_AUTO=0
+      - PS_FOLDER_ADMIN=admin123
+      - ADMIN_MAIL=shopy@shopy.es
+      - ADMIN_PASSWD=12345678
+  mariadb:
+    build: ./docker/mariadb
+    ports:
+      - 3306:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=prestashop
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    links:
+      - mariadb
+    ports:
+      - 8081:80
+    environment:
+      - PMA_HOST=mariadb
+      - PMA_USER=root
+      - PMA_PASSWORD=root
